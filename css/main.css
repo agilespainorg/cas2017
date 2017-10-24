@@ -523,6 +523,34 @@ a:hover {
     margin-top: 20px;
 }
 
+
+/* Cómo llegar */
+
+.google-maps {
+    position: relative;
+    padding-bottom: 25%; // This is the aspect ratio
+    height: 400px;
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+.google-maps iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 400px !important;
+}
+
+@media (max-width: 768px) {
+   .google-maps{
+     display: none;
+   }
+}
+
+.how-to-access h2{
+    color: #3892ED;
+}
+
 @media (min-width: 768px) { 
      #casinfo{
         margin-top: 70px;
@@ -606,6 +634,93 @@ a:hover {
         margin-right: -140px;
     }
 }
+
+/* HOTELS */
+
+table.hotels{
+    color: #3892ED;
+    border: none;
+    font-weight: bold;
+    width: 100%;
+}
+
+.hotels tr:nth-child(2n+1){
+    background: #E3E5E3;
+}
+
+.hotels a{
+    color: black !important;
+}
+
+.hotels th{
+    background: #3892ED;
+    color: white;
+    text-transform: uppercase;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.hotels th.hotel-name-title{
+    font-size: 15px;
+}
+
+.hotels td{
+    border-right: 1px solid #3892ED;
+    vertical-align: top;
+    padding: 10px;
+    text-align: center;
+}
+
+
+.hotels td.event{
+    text-align: center;
+}
+
+.hotels td:last-child{
+    border-right: none;
+}
+
+.hotels .hotel-name{
+    text-align: left;
+}
+
+span.speaker {
+    color: black;
+    width: 100%;
+    display: block;
+    font-style: italic;
+    font-weight: normal;
+}
+
+span.speaker.first{
+    margin-bottom: 10px;
+}
+
+
+.double{
+    position: relative;
+}
+
+.joining{
+    position: absolute;
+    width: 1px;
+    height: 180px;
+    border: 1px solid;
+    left: 50%;
+    bottom: -50px;
+}
+
+
+@media screen and (max-width: 640px) {
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+}
+
+
+
 
 
 
