@@ -3,24 +3,145 @@
 	<head>
 		<title>CAS2017</title>
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/main.css?v=2.0">
-        <link rel="stylesheet" href="css/talks.css">
+        <link rel="stylesheet" href="css/main.css?v=2.0">
+        <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/responsive-tabs.css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link href="https://fonts.googleapis.com/css?family=Lato&amp;subset=latin-ext" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="import" href="menu.html" id="link-menu">
 		<link rel="import" href="footer.html" id="link-footer">
-	</head>
+        <script src="js/jquery.min.js"> </script>          
+        <script src="js/jquery.responsiveTabs.min.js"> </script>
+
+    </head>
 
 	<body>
+
 
 		<script src="js/html-imports.js"></script>
 		<script src="js/custom.js"></script>
 
-		<div id="menu"></div>		
+		<div id="menu"></div>
+
+              
+       
+        <!-- The Modal -->
+        <div id="myModal" class="modal">                      
+          <!-- Modal content -->
+          <div id="modal-content" class="modal-content">
+                <!-- Trigger/Open The Modal -->
+                
+          </div>
+
+        </div>	
+
+		<script>
+
+            // Get the modal
+            var modal = document.getElementById('myModal'); 
+
+           
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
 
 
-		<section>
+            /* My Code */
+            var closeDetails = function(){
+                modal.style.display = "none";
+            }
+
+            var showDetails = function(id){
+                var container = document.getElementById('modal-content');
+                var talk = getTalkById(id);
+                var template = getTemplate(talk);
+                container.innerHTML = template;
+                modal.style.display = "block";
+            }
+
+            var getTemplate = function(talk){
+                var template = '<div id="talk-modal">';
+                template += '<span class="close" onClick="closeDetails()">&times;</span>';
+                template += '<div id="talk-modal-talk">';
+                template += '<h3> ' + talk.title + '</h3>';  
+                template += '<p><b> ' + talk.format + '</b></p>';             
+                template += '<p> ' + talk.description + '</p>';
+                template += '</div>';
+                template += '<div id="talk-modal-speaker">';
+                
+                template += '<h4> ' + talk.name + '</h4>';    
+                if(talk['image']){
+                    template += '<p> <img src="images/speakers/' + talk['image'] + '"></p>';                
+                }            
+                if(talk.linkedin){
+                    template += '<a href="' + talk.linkedin + '" target="_blank"> <i class="fa fa-linkedin" aria-hidden="true"></i></a>' 
+                    
+                }
+                if(talk.twitter){
+                    template += '<a href="https://twitter.com/' + talk.twitter + '" target="_blank"> <i class="fa fa-twitter" aria-hidden="true"></i></a>' 
+                    
+                }
+                  if(talk.web){
+                    template += '<a href="' + talk.web + '" target="_blank">wWw</a>' 
+                    
+                }   
+                template += '<p id="talk-speaker-description"> ' + talk['author-des'] + '</p>';               
+                if(talk.others){                    
+                    for(var i=0; i < talk.others.length; i++){ 
+                        console.log(talk.others[i]);
+                        template += '<h4 style="margin-top: 40px;"> ' + talk.others[i].name + '</h4>';    
+                        if(talk.others[i]['image']){
+                            template += '<p> <img src="images/speakers/' + talk.others[i]['image'] + '"></p>';                
+                        }            
+                        if(talk.others[i].linkedin){
+                            template += '<a href="' + talk.others[i].linkedin + '" target="_blank"> <i class="fa fa-linkedin" aria-hidden="true"></i></a>' 
+                            
+                        }
+                        if(talk.others[i].twitter){
+                            template += '<a href="https://twitter.com/' + talk.others[i].twitter + '" target="_blank"> <i class="fa fa-twitter" aria-hidden="true"></i></a>' 
+                            
+                        }
+                          if(talk.others[i].web){
+                            template += '<a href="' + talk.others[i].web + '" target="_blank">wWw</a>' 
+                            
+                        }  
+                        template += '<p id="talk-speaker-description"> ' + talk.others[i]['author-des'] + '</p>';    
+                    }
+                }
+                template += '</div>';
+                template += '</div>';
+                return template;
+            }
+
+            var getTalkById = function(id){
+                var myTalk = null;
+                $.each(talks, function(i, talk) {
+                    if (talk.id === id) {  
+                        myTalk = talk;
+                        return false;
+                    }
+                });
+                return myTalk;
+            }
+            
+
+            /* Loading talks */
+            var talks = [];
+            /* AJAX */
+            $.ajax({
+              url: "agenda.json"              
+            }).done(function(response) {
+              talks = response;
+            });
+        </script>
+
+
+        <section>
 			<div class="container">
                <div class="row">
                     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
@@ -31,1198 +152,1373 @@
                     </div>
                     <div class="col-xs-12 col-sm-8 col-sm-offset-2 container-subtitle">
                         <p class="main-subtitle" data-translatable>
-                            ¡Ya tenemos las charlas aceptadas!
-                        </p>
-                        <p class="main-subtitle main-smaller-subtitle" data-translatable>
-                            Aún estamos trabajando en cuadrar la agenda, pero ya podemos ver qué charlas estarán. Este listado, aún puede subrir algún cambio.                    
-                        </p>
-                        <br/>                       
-                    </div>
-                </div>           
-              <div class="container talks-table">
-                <div class="row talk-type">
-                    <div>
-                        Talleres XL (110 minutos)
-                        <div class="decorator"></div>
-                    </div>
-
-                </div>
-                <!-- Talk -->  
-                <div class="row">
-                  <div class="col-xs-12 col-sm-3 talk-title">
-                    KANBAN SYSTEM DESIGN - Toma el control para que puedas empezar a mejorar
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Gerard Chiva y Pablo Domingo 
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                        Kanban se está expandiendo rápidamente como el camino alternativo a la agilidad, pero aún hay mucho desconocimiento, ideas equivocadas y malas interpretaciones.
-                        </p>
-                        <p>
-                        Kanban es un método para definir, gestionar y mejorar los servicios que proporcionan trabajo de conocimiento.
-                        En este taller dinámico y práctico aprenderás a iniciar Kanban en un servicio de la mano Pablo Domingo y Gerard Chiva, dos de los principales expertos a nivel nacional.
-                        </p>
-                        <p>
-                            El principal objetivo de este taller es aprender a tomar control sobre tu forma actual de trabajar y alcanzar una base para una mejora continua estable. Para ello vamos a realizar una simulación con un juego de mesa para representar un entorno real de trabajo y aplicaremos el método STATIK pensado para ayudar a un equipo a poner en marcha un sistema kanban de forma rápida y efectiva.
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- End Talk -->
-                
-                 <!-- Talk -->  
-                <div class="row">
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Dinámicas para ayudar a nuestros equipos a crecer
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Elena Navarro Molina y  Josep Maria Rocamora Batalla. 
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            ¿Necesitas fomentar el trabajo en equipo, evitar la multitarea, aumentar la comunicación o cohesionar tu equipo? En este workshop lo comprobaremos a través de  diferentes dinámicas, cada una enfocada a trabajar un aspecto del trabajo en equipo; reflexionaremos sobre qué nos aporta cada una y los distintos tipos de aprendizaje. Y todo esto utilizando actividades lúdicas que podrás aplicar a tu día a día.
-                        </p>
-                    </div>
-                    <!-- End Talk -->
-                </div>
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Taller de Facilitación Gráfica
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Roberto Cruz Cantero y David Fernández González
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Si piensas que "el arte" es morirte de frío, ¡estás en lo cierto!. 
-                        </p>
-                        <p>
-                            ¿Has oído hablar de Bikablo?¿Sabes que es Sketchnoting, Graphic Recording o Visual Thinking? ¡No importa!
-                            En este taller abordaremos unos primeros pasos en Facilitación Gráfica.<br>
-                            Daremos los apuntes básicos para dar apoyo gráfico a tus explicaciones y apuntes.
-                            Buscamos COMPARTIR.
-                        </p>
-                        <p>
-                            No es necesaria experiencia previa, sólo ganas de pasarlo bien (y un rotulador).
-                        </p>                         
-                     </div>
-                </div> 
-                <!-- End Talk -->     
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        ¡Deconstruyendo los roles de Scrum con LEGO!
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Santiago Vidal Gato 
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           ¿Conoces las habilidades necesarias para desarrollar tu rol en Scrum? En este taller LEGO® Serious Play®  reflexionaremos sobre los principales roles de Scrum(PO ,SM y Eq. de Desarrollo). El objetivo es que, jugando, cada uno reflexione sobre qué cualidades y habilidades pose ahora mismo y, entre todos de manera colaborativa, definamos cuáles serían las habilidades y valores ideales de cada uno de estos roles.
-                        </p>                        
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-               
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Creando los cimientos de una cultura Agile
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Diego Rojas
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En Agile son muy importantes las personas y sus interacciones. Además, hablamos que tenemos que generar una cultura Agile en la organización. En este taller experiencial me gustaría compartir con vosotros (y que probéis) algunos de los mecanismos que pongo en practica para generar una cultura Agile en las organizaciones.
-                        </p>                        
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Liderazgo para la transformación
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Jose Ramón Díaz
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Liderazgo. Concepto sobreutilizado en nuestras organizaciones hoy en día. ¿Deberíamos ser líderes? ¿qué significa exactamente eso? Este taller trata de arrojar luz sobre nuestra visión del líder.
-                        </p>
-                        <p>
-                            Además, muchas de nuestras organizaciones se encuentran en proceso de cambio, de transformación. ¿qué podemos esperar de nuestros líderes? ¿Cómo podemos responder de manera efectiva?
-                            En este taller exploraremos la relación con el liderazgo, cómo nos sirve en las transformaciones, qué papel jugamos en cada uno de los roles en los que nos podemos encontrar.
-                        </p>                        
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                 <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Equipos Agiles Modo Bambú: Fuertes pero Flexibles
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Jesus Mendez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En este taller prácti​c​o, ​mi intensión es que compartamos a traves de la simulación, la observación y la reflexión colectiva, nuestras experiencias sobre las características de los equipos ágils fuertes y flexibles, las etapas del desarrollo de este tipo de equipos y que pongamos en práctica algunas técnicas que suelo utilizar, para mejorar los resultados que produce el equipo, mediante la creación de conciencia sobre el valor de la flexibilidad para adaptarse rápidamente y sobrevivir en el mundo actual. ​​
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                  <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        ¡Design Thinking o cómo escapar de las viejas ideas!
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Óscar Naveiras Picos
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Taller Design Thinking basado en un proceso ágil y dinámico de innovación. A lo largo de casi dos horas, los participantes buscarán soluciones creativas y disruptivas a una serie de problemas siguiendo un proceso de innovación totalmente vivencial. Los equipos pasarán por varias etapas guiadas y facilitadas que van desde la exploración, la ideación y el prototipado. 
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->                  
-                <div class="row talk-type">
-                    <div>
-                        Talleres L (50 minutos)
-                        <div class="decorator"></div>
-                    </div>
-                </div>
-                 <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Gamestormingr
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        María José Contreras y Janire Paskua
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Vamos a crear juntos un ambiente donde fluya la creatividad y la innovación a través de una serie de herramientas fáciles, demostrando que el juego puede ser una técnica creativa valiosa y potente que podrás llevarte a tu día a día.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->                  
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Taller de introducción al coaching. Cómo tener conversaciones diferentes.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Marta San Martín Arribas
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En este taller aprenderemos algunas técnicas básicas de coaching q podemos usar en nuestras conversaciones habituales y a veces difíciles para lograr una comunicación más fluida, productiva y con un mayor nivel de conexión y entendimiento. Desde cómo hacer las preguntas adecuadas a cómo escuchar de manera auténtica de manera que la conversación sea fructífera y estemos más cerca de conseguir los resultados que queremos.  
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                 <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       The 8 stances of a Scrum Master
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        <b>Barry Overeem</b>
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
                             
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Auto organización a escala.
+                        </p>
+                        <p class="main-subtitle main-smaller-subtitle">
+                             Además de la agenda oficial de charlas te ofrecemos una cena en uno de los puntos mas emblemáticos de Sevilla. <a href="https://www.ticketea.com/entradas-networking-cena-cas-2017/" target="_blank" >Saber más... </a>                   
+                        </p>                                    
                     </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Adrian Perreau de Pinninck Bas
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           En esta sesión participativa resolveréis un problema con los demás participantes de manera auto organizada. Una vez resuelto el problema, analizaremos en pequeños grupos el proceso de auto organización. Finalmente, revisaremos un modelo de auto organización y veremos los patrones que se pueden usar para promover la auto organización y algunos anti patrones que la sofocan.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Taller de Agile fuera de software
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Xavier Quesada Allue
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           En este workshop que combina teoría y simulación, aprenderás como extender Scrum y Kanban a equipos que no hacen desarrollo de producto. Ejemplos: equipos de marketing, ventas, operaciones, administrativos, RRHH... aplica a todo equipo que trabaja en entornos mixtos de proyectos y BAU (Business as Usual) y también a la productividad personal. 
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       El Product Owner Estrategico.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Cristian Camilo Velásquez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           ¿ Estas dispuesto a poner a prueba tus habilidades de priorización en un contexto de incertidumbre ? <br>
-                            Por medio de este juego de rol, te embarcaras en una misión espacial donde tomaras decisiones estrategicas para maximizar el valor generado.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Training from the BACK of the Room. Aprendiendo a enseñar mejor.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Miquel Rodríguez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Cuando impartes una formación, ¿lo haces pensando en cómo aprenden tus alumnos? <br>
-                            En este taller práctico de Training from the BACK of the Room veremos cómo diseñar una
-                            formación para que tenga el máximo impacto, basándonos en cómo funciona el cerebro en los
-                            procesos de aprendizaje. <br>
-                            Si te gusta impartir formación, sea cual sea el ámbito, este taller es para ti.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Communities of Practice - the not-so-hidden force behind Ericsson ICT Development Center's Agile Success
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Almudena Rodriguez Pardo
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Si tu compañía desea escalar la Agilidad a nivel empresarial, también requiere auto-organización a escala! Aquí es donde las Comunidades de Práctica (CoP) entran en acción. <br>
-                            Durante los últimos años hemos visto emerger en Ericsson ICT Development Center Aachen (Alemania) CoPs que han impulsado el desarrollo de estrategias de Kaizen, T-Shape, DevOps… incluso los aspectos operacionales se inspiran y apoyan en las CoPs. <br>
-                            ¡Os presentaremos nuestras experiencias, y analizaremos el secreto de su éxito!
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk --> 
-                <div class="row talk-type">
-                    <div>
-                        Charlas M (20 minutos)
-                        <div class="decorator"></div>
-                    </div>
+                </div>                  
+            </div>        
+        </section>
+        <section class="container visible-xs">
+            <div id="responsiveTabs-mobile">
+                <ul>
+                    <li><a href="#thursday-mobile"> JUEVES </a></li>
+                    <li><a href="#friday-mobile"> VIERNES </a></li>
+                </ul>
+                <div class="row" id="thursday-mobile">
+                    <table class="mobile-table">
+                <tr>
+                    <th> 8:00h/8:50h </th>
+                    <td> 
+                        <span class="event"> Check-in </span>
+                    </td>
+                </tr>
+                <tr>                    
+                    <th> 8:00h/8:50h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-coffee" aria-hidden="true"></i>
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 8:50h/9:15h </th>
+                    <td>
+                        <span class="space"> A.Al-Ándalus </span>
+                        <span class="event"> Bienvenida </span>
+                    </td>
+                </tr>    
+                <tr>
+                    <th> 9:15h/10:00h </th>
+                    <td onClick="showDetails(76)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title"> Keynote: Transformación digital y humana </span>
+                         <span class="speaker">Ramón Cabezas</span>
+                    </td>
+                </tr>                
+                <tr>
+                    <th> 10:00h/10:50h </th>
+                    <td onClick="showDetails(38)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Scrum Studio: Creando iniciativas digitales en organizaciones tradicionales</span>
+                        <span class="speaker">Jerónimo Palacios</span>
+                    </td>
+                    <td onClick="showDetails(69)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Agilidad, Scrum y Técnicas Ágiles de Desarrollo</span>
+                        <span class="speaker">Raúl Herranz</span>
+                    </td>                            
+                    <td onClick="showDetails(43)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Escalando la Cordillera de la Autogestión</span>
+                        <span class="speaker">Toni Rodríguez</span>
+                    </td>
+                    <td onClick="showDetails(63)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Scrum@Scale</span>
+                        <span class="speaker">Primitivo Cachero</span>
+                    </td>
+                    <td onClick="showDetails(15)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller de Agile fuera de software</span>
+                        <span class="speaker">Xavier Quesada</span>
+                    </td>
+                    <td onClick="showDetails(13)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Taller: The 8 stances of a Scrum Master</span>
+                        <span class="speaker">Barry Overeem</span>
+                    </td>
+                </tr>
+                <tr>                    
+                    <th> 10:50h/11:30h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-coffee" aria-hidden="true"></i>
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 11:30h/12:20h </th>
+                    <td onClick="showDetails(44)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Slow Agile - ¡Que vuelvan los lentos!</span>
+                        <span class="speaker">Thomas Wallet</span>
+                    </td>
+                    <td>                        
+                        <span class="space">  A.Itálica </span>
+                        <span onClick="showDetails(18)">
+                            <span class="mobile-title">Introducción a Agile - Límites del enfoque tradicional y evolución agile.</span>
+                            <span class="speaker">Marga Bel Klever</span>
+                        </span>
+                        <span onClick="showDetails(19)">
+                            <span class="mobile-title">El Kanban, herramienta todoterreno y elástica</span>
+                            <span class="speaker">Sylvain Loubradou</span>
+                        </span>
+                    </td>                            
+                    <td onClick="showDetails(48)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Discusiones y decisiones: herramientas para la efectividad</span>
+                        <span class="speaker">Toño de la Torre</span>
+                    </td>
+                    <td onClick="showDetails(67)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Escalado. Hacerse adulto sin pasar por la adolescencia</span>
+                        <span class="speaker">Adrián de la Horra</span>
+                    </td>
+                    <td onClick="showDetails(5)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller: Creando los cimientos de una cultura Agile</span>
+                        <span class="speaker">Diego Rojas</span>
+                    </td>
+                    <td onClick="showDetails(4)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Taller: ¡Deconstruyendo los roles de Scrum con LEGO!</span>
+                        <span class="speaker">Santiago Vidal</span>
+                    </td>
+                </tr>    
+                <tr>
+                    <th> 12:30h/13:20h </th>
+                    <td onClick="showDetails(53)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            De grupos de trabajo a equipos de alto rendimiento</span>
+                        <span class="speaker">Israel Alcázar</span>
+                    </td>
+                    <td onClick="showDetails(70)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Valores y principios en el diseño del software</span>
+                        <span class="speaker">Fran Reyes</span>                       
+                    </td>                            
+                    <td onClick="showDetails(35)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">La felicidad laboral en lo tangible</span>
+                        <span class="speaker">Susana Morcuende</span>
+                    </td>
+                    <td onClick="showDetails(46)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Argos, cuando Scrum no es suficiente</span>
+                        <span class="speaker">Esther Peinado y Alberto Serrano</span>
+                    </td> 
+                </tr>   
+                <tr>                    
+                    <th> 10:50h/11:30h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                        </span>
+                    </td>
+                </tr> 
+                <tr>
+                    <th> 14:40h/15:30h </th>
+                    <td onClick="showDetails(36)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Cómo organizar tu transformación Agile y que no se vuelva un lío</span>
+                        <span class="speaker">Xavier Albaladejo</span>
+                    </td>
+                    <td onClick="showDetails(64)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Scrum: Try again!</span>
+                        <span class="speaker">Benjamín Garrido</span>                        
+                    </td>                            
+                    <td onClick="showDetails(49)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">No me llames Dolores, llámame Lola. Cultura de la Comunicación</span>
+                        <span class="speaker">Antonio Martínez</span>
+                    </td>
+                    <td onClick="showDetails(45)"> 
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Scrum y SAFe puestos en práctica: aterrizaje de roles en la realidad de un banco</span>
+                        <span class="speaker">Ignacio Brime</span>
+                    </td>
+                    <td onClick="showDetails(1)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller: KANBAN SYSTEM DESIGN - Toma el control para que puedas empezar a mejorar</span>
+                        <span class="speaker">Gerard Chiva</span>
+                    </td>
+                    <td onClick="showDetails(6)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Taller: Liderazgo para la transformación</span>
+                        <span class="speaker">Jose Ramón Díaz</span>
+                    </td>
+                </tr> 
+                <tr>
+                    <th> 15:40h/16:30h </th>
+                    <td>
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span onClick="showDetails(24)">
+                            <span class="mobile-title">
+                                Los domingos no eres ágil (y tenemos pruebas)</span>
+                            <span class="speaker">Nino Dafonte</span>
+                        </span>
+                        <span onClick="showDetails(29)">
+                            <span class="mobile-title">
+                               Dieta Agile. No comas mejor, deja de comer peor</span>
+                            <span class="speaker">David Jiménez</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="space">  A.Itálica </span>
+                        <span onClick="showDetails(20)">
+                            <span class="mobile-title">El PO como catalizador del cambio</span>
+                            <span class="speaker">Ferran Gomis</span>
+                        </span>
+                        <span onClick="showDetails(31)">
+                            <span class="mobile-title">From zero to hero - arrancando un proyecto SCRUM</span>
+                            <span class="speaker">Raquel Pérez</span> 
+                        </span>                        
+                    </td>                            
+                    <td>
+                        <span class="space">  S.Albaicín </span>
+                        <span onClick="showDetails(26)">
+                            <span class="mobile-title">Peer Learning Universites. Aprendiendo de los desafíos de Twitter</span>
+                            <span class="speaker">Aleix Palau</span>
+                        </span>
+                        <span onClick="showDetails(73)">
+                            <span class="mobile-title">Cómo ser más feliz siendo Lean Thinker</span>
+                            <span class="speaker">Nati Vilela</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="space">  S.Ronda </span>
+                        <span onClick="showDetails(21)">    
+                            <span class="mobile-title">La Retro de Portfolio</span>
+                            <span class="speaker">Gerardo Ponte</span>
+                        </span>
+                        <span onClick="showDetails(32)">
+                            <span class="mobile-title">Effort Estimation vs Value Estimation</span>
+                            <span class="speaker">Sergi Casbas</span>
+                        </span>
+                    </td>                   
+                </tr>    
+                <tr>
+                    <th> 16:30h/17:00h   </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-coffee" aria-hidden="true"></i>
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 17:00h/17:50h </th>
+                    <td onClick="showDetails(37)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Pedimos apoyo al más alto nivel, ¿cómo convencemos a un C-Level de una Transformación Agile?</span>
+                        <span class="speaker">Carlos Moure</span>
+                    </td>
+                    <td onClick="showDetails(71)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">En mi equipo esto funciona pero no sé porque</span>
+                        <span class="speaker">Aitor Alzola</span>
+                    </td>                            
+                    <td onClick="showDetails(72)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Guía de autocrecimiento del Scrum Master</span>
+                        <span class="speaker">Gastón Valle</span>
+                    </td>
+                    <td onClick="showDetails(66)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Modelo Spotify como inspiración para crear una nueva unidad internacional de un gran banco.</span>
+                        <span class="speaker">Gemma Hornos y Nicolas Chaper</span>
+                    </td>
+                    <td onClick="showDetails(11)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller: It’s more than drawing… become a visual facilitator today!</span>
+                        <span class="speaker">Jaume Durany y Juan Antonio Sosa</span>
+                    </td>
+                    <td onClick="showDetails(12)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Taller de introducción al coaching. Cómo tener conversaciones diferentes.</span>
+                        <span class="speaker">Marta San Martín</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 18:00h/19:00h </th>
+                    <td onClick="showDetails(77)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title"> Keynote: La voz, la clave del éxito en tu comunicación </span>
+                        <span class="speaker"> Marta Pinillos </span>
+                    </td>
+                </tr>    
+            </table> 
                 </div>
-                 <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Introducción a Agile - Límites del enfoque tradicional y evolución agile.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Marga Bel Klever
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           En esta charla se pretende explicar brevemente qué es y qué no es Agile, las diferentes formas de ejecutar un proyecto asemejándolo a cómo plantear un viaje: los pros y contras de Agile y de las metodologías tradicionales, la diferencia entre el enfoque empírico y predictivo y una breve explicación del concepto de entrega iterativa incremental.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->  
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        El Kanban todo terreno, herramienta elástica
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Sylvain Loubradou
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           Hasta ahora, para entrar en distintos entornos que IT o marketing, he usado el Kanban como caballo de troya. Sus caracteristicas todo terreno y elasticas han sido mis mejores aliados para asegurar el exito de la implantacion agil más alla de la producción de software. Presentare los aspectos destacables necesarios para garantizar la adaptabilidad del metodo agil en cualquier terreno :)
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                 <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Pasar de un modelo gestión proyectos Waterfall a Agile (Scrum)
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">                        
-                        Cristóbal Gonzalez y Javier Sánchez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                           Experiencia de la gestión por primera vez en la empresa de gestión de proyectos mediante metodología agile (Scrum)
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        El PO como catalizador del cambio
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Ferran Gomis de Dios
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En este último año como PO me he dado cuenta de una cosa: tengo una butaca privilegiada desde la que veo el funcionamiento del equipo de desarrollo y el funcionamiento del resto de departamentos de la empresa. Y como PO tengo influencia directa sobre lo que vamos a desarrollar, a la vez que puedo ayudar a los stakeholders a obtener una visión más global de la empresa, objetivos, procesos internos y desarrollos. Combinando esto con un afán de mejora continua a través de la experimentación resulta que estamos consiguiendo un funcionamiento interno mucho más coordinado y colaborativo, estamos siendo capaces de combinar el pago de deuda técnica con el desarrollo de nuevas funcionalidades, a través del  diálogo y cooperación entre stakeholders y equipo de desarrollo, y estamos introduciendo retrospectivas y ciclos de mejora continua en departamentos fuera de IT. <br>
-                            Aquí es donde hice la reflexión, que tener un PO, que sea un agilista convencido y entusiasta puede ayudar a empujar y acelerar la transformación de una empresa, versus tener un PO que no entienda esta transformación, y que puede romper esta transformación. <br>
-                            Obviamente nada de esto es posible sin el apoyo convencido de los fundadores y de management, que siguen siendo estrictamente necesarios. Mi tesis es que en una transformación agile, el PO va a tener un peso enorme, y normalmente no reconocido, para acelerarla, ralentizarla, o incluso romperla
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->  
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        La Retro de Portfolio
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Gerardo Ponte
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En todo proyecto ágil tiene que existir un proceso de mejora continua. Si el proyecto lo compone un solo equipo aplicamos la retrospectiva al uso; pero, ¿cómo lo hacemos cuando se trata de un proyecto de más de 500 personas? <br>
-                            En el proyecto de Transformación Digital de BBVA comenzamos realizando retrospectivas masivas con todos los miembros del proyecto, pero a base de prueba y error las hemos sustituido por una retrospectiva en la que participan los miembros de portfolio junto con los program managers.<br>
-                            En esta charla te cuento todos los detalles: cuándo se realizan, quién las facilita, qué dinámicas seguimos y cuáles han sido los resultados desde comienzos de 2016 hasta la fecha. <br>
-                            Y, por supuesto, también cómo damos voz al resto de miembros del proyecto para que aporten en la mejora continua del mismo.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->  
-                <!-- talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Equipos autorganizados... y de managament... pues va a ser que si!
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Joaquín Precioso Sánchez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            En Management3.0 nos hablan de equipos autorganizados; de management compartido;de establecimiento de pequeñas fronteras y restricciones para favorecer la libertad y la creatividad; de superar los modelos de empresas departamentales, en definitiva de un nuevo modelo adaptado a las necesidades de los tiempos que vivimos.
-                        </p>
-                        <p>
-                            En estos momentos, tengo la gran suerte de participar en un reto profesional que me permite poner en práctica algunas de las ideas y propuestas que Jurgen Appelo comparte en sus libros, publicaciones y grupos de Management3.0. 
-                        </p>
-                        <p>
-                            Me gustaría compartir con todos aquellos que quieran escucharme una serie de experiencias reales, que de modo casual o dirigido (no lo tengo muy claro) me permiten sentir que estoy un poquito más cerca de estar en un entorno 3.0 y por supuesto de contribuir a crearlo. 
-                        </p>
-                        <p>
-                            Explicaré como ha surgido un equipo ""de management"" autorganizado y autogestionado. Cómo cada una de las cuatro personas que formamos parte del equipo hemos sido capaces de encontrar nuestro sitio, más allá de etiquetas profesionales o roles. Como responsables del centro de desarrollo que estamos montando, tratamos de aplicar realmente un modelo de gestión basado en personas y no solo en""recursos"", estableciendo relaciones entre todos los compañeros que formamos el centro de una manera más personal y no solo desde el plano técnico-profesional. Contar y buscar ejemplos reales de las prácticas, ejercicios y modelos que proponen Appelo en Management3.0
-                        </p>
-                        <p>
-                            En definitiva, y con toda la humildad posible pues nos queda mucho trabajo aún, se trata de compartir una experiencia.
-                        </p>                                           
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        7 things an Agile Coach should know but doesn't
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Steven Wallace
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        Agile coaching is not easy. People will be quick to criticise and slow to praise. It can be a dangerous job if done wrongly. Your parents will stare blankly at you while you explain what your job is…<br>
+                 <div id="friday-mobile" class="row"> 
+                     <table class="mobile-table">
+                <tr>
+                    <th> 9:30h </th>
+                    <td> 
+                        <span class="event"> Bienvenida </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 9:15h/10:00h </th>
+                    <td onClick="showDetails(74)">
+                        <span class="space"> A.Al-Ándalus </span>
+                        <span class="mobile-title"> Keynote: The 8 Stances of a Scrum Master </span>
+                        <span class="speaker">Barry Overeem</span>
+                    </td>
+                </tr>  
+                <tr>
+                    <th> 10:00h/10:50h </th>
+                    <td onClick="showDetails(56)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            No hay mejora de Customer Experience sin Agile</span>
+                        <span class="speaker">Carlos Iglesias</span>
+                    </td>
+                    <td onClick="showDetails(42)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Agilidad (Hacia la entrega continua ¿Qué te lo impide?)</span>
+                        <span class="speaker">Eduardo Ferro</span>
+                    </td>                            
+                    <td onClick="showDetails(47)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Coaching con datos</span>
+                        <span class="speaker">Jaume Jornet</span>
+                    </td>
+                    <td onClick="showDetails(39)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Running Sushi Product</span>
+                        <span class="speaker">Manuela Procopio y Alberto Gomez</span>
+                    </td>
+                    <td onClick="showDetails(9)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller: Gamestorming</span>
+                        <span class="speaker">María José Contreras, Janire Paskua</span>
+                    </td>
+                    <td onClick="showDetails(10)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Taller: Training from the BACK of the Room. Aprendiendo a enseñar mejor</span>
+                        <span class="speaker">Miquel Rodríguez</span>
+                    </td>
+                </tr>
+                <tr>                    
+                    <th> 10:50h/11:30h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-coffee" aria-hidden="true"></i>
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 11:30h/12:20h </th>
+                    <td onClick="showDetails(41)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Gestionando el roadmap de producto de forma efectiva</span>
+                        <span class="speaker">Vanesa Tejada</span>
+                    </td>
+                    <td onClick="showDetails(61)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">BDD: Colaborando de Verdad con Negocio</span>
+                        <span class="speaker">Eduardo Riol</span>
+                    </td>                            
+                    <td onClick="showDetails(17)">
+                        <span class="space">  S.AlbComunidades de Practica – la fuerza no-tan-oculta impulsando el éxito de Ericsson ICT Development Center</span>
+                        <span class="speaker">Almudena Rodriguez</span>
+                    </td>
+                    <td onClick="showDetails(59)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Impedimentos: Gestión eficaz al escalar Scrum</span>
+                        <span class="speaker">Juan José del Campo</span>
+                    </td>
+                    <td onClick="showDetails(2)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Aprendemos practicando y jugando</span>
+                        <span class="speaker">Elena Navarro Molina</span>
+                    </td>
+                    <td onClick="showDetails(8)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">¡Design Thinking o cómo escapar de las viejas ideas!</span>
+                        <span class="speaker">Óscar Naveiras Picos</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 12:30h/13:20h </th>
+                    <td onClick="showDetails(58)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Agilidad @ trivago</span>
+                        <span class="speaker">Marcos Pacheco Montero</span>
+                    </td>
+                    <td onClick="showDetails(62)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Yo soy Dev, yo soy Ops y somos dos en un equipo</span>
+                        <span class="speaker">Luis Fraile y Leo Díaz</span>
+                    </td>                            
+                    <td onClick="showDetails(52)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Agile desde las trincheras: una historia de Agile Coaches</span>
+                        <span class="speaker">Juanma Gómez, Pep Ramírez, David González, Eduardo Cabrera</span>
+                    </td>
+                    <td onClick="showDetails(68)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Transformación de la relación de la relación de IT con las unidades de negocio</span>
+                        <span class="speaker">Raquel Laina</span>
+                    </td>
+                </tr>
+                <tr>                    
+                    <th> 13:20h/14:40h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                            <i class="fa fa-cutlery" aria-hidden="true"></i>
+                        </span>
+                    </td>
+                </tr> 
+                <tr>
+                    <th> 14:40h/15:30h </th>
+                    <td onClick="showDetails(51)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Khaleesi is coming! Cómo conquistar los 7 reinos de la Transformación Digital antes de que “Los Otros” (CIO) se te adelanten</span>
+                        <span class="speaker">Julián Gómez</span>
+                    </td>
+                    <td onClick="showDetails(50)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">TDD: Mi cuaderno de recetas</span>
+                        <span class="speaker">Modesto San Juan</span>
+                    </td>                            
+                    <td onClick="showDetails(65)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">Ya somos ágiles ¿Y ahora qué?: The Big Bang Theory</span>
+                        <span class="speaker">José Antonio Ortega</span>
+                    </td>
+                    <td onClick="showDetails(57)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Doble V: Vicios y Virtudes</span>
+                        <span class="speaker">José Ramón Gil</span>
+                    </td>
+                    <td onClick="showDetails(3)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">Taller de Facilitación Gráfica</span>
+                        <span class="speaker">Roberto Cruz y David Fernández</span>
+                    </td>
+                    <td onClick="showDetails(7)"> 
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Equipos Agiles Modo Bambú: Fuertes pero Flexibles</span>
+                        <span class="speaker">Jesús Méndez</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 14:40h/15:30h </th>
+                    <td>                        
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span onClick="showDetails(23)">
+                            <span class="mobile-title">7 things an Agile Coach should know but doesn't</span>
+                            <span class="speaker">Steven Wallace</span>
+                        </span>
+                        <span onClick="showDetails(27)">
+                            <span class="mobile-title">IKEA del siglo XXI. La transformación de la caja azul.</span>
+                            <span class="speaker">Pilar Garcia y Manu López</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="space">  A.Itálica </span>
+                        <span onClick="showDetails(34)">
+                            <span class="mobile-title">Hacking Scrum: piratas iterativos incrementales</span>
+                            <span class="speaker">Juan Bacardit</span>
+                        </span>
+                        <span onClick="showDetails(28)">
+                            <span class="mobile-title">El arte de dar y recibir feedback</span>
+                            <span class="speaker">Raúl Quesada Pegalajar</span>
+                        </span>
+                    </td>                            
+                    <td>
+                        <span class="space">  S.Albaicín </span>
+                        <span onClick="showDetails(33)">
+                            <span class="mobile-title">Promueve una comunidad de práctica en tu empresa</span>
+                            <span class="speaker">Daniel de la Cruz</span>
+                        </span>
+                        <span onClick="showDetails(30)">
+                            <span class="mobile-title">Refactoring agile teams</span>
+                            <span class="speaker">Ricard Fusté y Albert Velasco</span>
+                        </span>
+                    </td>
+                    <td>
+                        
+                        <span class="space">  S.Ronda </span>
+                        <span onClick="showDetails(25)">
+                            <span class="mobile-title">Haz lo que yo te diga, pero no lo que yo haga. ¿Y tu, Scrum Master o Agile Coach, sigues los principios ágiles?</span>         
+                            <span class="speaker">Manolo López</span>
+                         </span>
+                        <span onClick="showDetails(22)">
+                            <span class="mobile-title">Equipos autorganizados... y de managament... pues va a ser que si!</span>
+                            <span class="speaker">Joaquín Precioso Sánchez</span>
+                        </span>
+                    </td>
+                </tr>
+                 <tr>                    
+                    <th> 16:30h/17:00h </th>
+                    <td> 
+                        <span class="event">
+                            <i class="fa fa-coffee" aria-hidden="true"></i>
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                            <i class="fa fa-coffee" aria-hidden="true"></i> 
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 17:00h/17:50h </th>
+                    <td onClick="showDetails(55)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">
+                            Experiencia de usuario como estrategia</span>
+                        <span class="speaker">Daniel Torres</span>
+                    </td>
+                    <td  onClick="showDetails(60)">
+                        <span class="space">  A.Itálica </span>
+                        <span class="mobile-title">Business Analysis, superpoderes para el Product Owner</span>
+                        <span class="speaker">Alfred Maeso</span>
+                    </td>                            
+                    <td onClick="showDetails(40)">
+                        <span class="space">  S.Albaicín </span>
+                        <span class="mobile-title">En busca del tiempo perdido</span>
+                        <span class="speaker">David González</span>
+                    </td>
+                    <td onClick="showDetails(54)">
+                        <span class="space">  S.Ronda </span>
+                        <span class="mobile-title">Communication strategies for scaled and distributed teams</span>
+                        <span class="speaker">Carlos Piqueres</span>
+                    </td>
+                    <td  onClick="showDetails(16)">
+                        <span class="space">  S.Bahía </span>
+                        <span class="mobile-title">El Product Owner estratégico
+                        <span class="speaker">Cristian Camilo</span>
+                    </td>
+                    <td  onClick="showDetails(14)">
+                        <span class="space"> S.Marismas </span>
+                        <span class="mobile-title">Auto organización a escala</span>
+                        <span class="speaker">Adrian Perreau</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th> 18:00h/18:50h </th>
+                    <td onClick="showDetails(78)">
+                        <span class="space">  A.Al-Ándalus </span>
+                        <span class="mobile-title">Keynote: Agile works when it's not about Agile - A Paradox </span>
+                        <span class="speaker">Neil Killick</span>
+                    </td>
+                </tr>   
+            </table> 
+                 </div>
+            </div> <!-- end responsive tabs -->
 
-                        Having worked in Agile for more than 8 years, I’ve learnt things that you wouldn’t believe to be true. How could they be after all? <br>
+              
 
-                        During the talk I look at 7 things I would have loved to have known before becoming an Agile Coach. I had to learn them the hard way, hopefully you don’t have to.<br>
-
-                        Some of the topics I’ll explore are :
-                        <ul>
-                            <li>how important the role of language is any transformation</li>
-                            <li>how agile creates lots of problems in organisations</li>
-                            <li>the types of developers who don’t want Agile and what you can do about it</li>
-                            <li>how big your ego is matters</li>
-                        </ul>                         
-                        And more things that no-one told me about. Why didn’t someone mention them before? Next thing someone will say the tooth fairy doesn’t exist… 
-
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Los domingos no eres ágil (y tenemos pruebas)
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Nino Dafonte
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Durante meses nos hemos dedicado a recopilar toda la información posible en redes sociales sobre Agile con la intención de investigar dónde está la comunidad ágil española posicionada dentro del mundo ágil en general. 1.000.000 de tweets después, podemos enseñaros los resultados. 
-                        </p>
-                        <p>
-                        En la charla podrás encontrar respuestas sobre:
-                        <ul>
-                            <li>¿A quién debería estar siguiendo?</li>
-                            <li>¿Quién/es son nuestros influenciadores?</li>
-                            <li>¿Qué temas debería haber leído o visto?</li>
-                            <li>¿Qué nos hace diferentes a la comunidad española respecto al resto del mundo agile?</li>               
-                            </ul>  
-                        ¡Ven a descubrirlo!
-                        </p>
-
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                 <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Cómo ser más feliz siendo Lean Thinker
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Nati Vilela
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Del pensamiento Lean busca sacar el máximo beneficio eliminando el desperdicio. A pesar de que hace ya más de 50 años desde que Toyota creó la filosofía Lean, sus principios son totalmente aplicables, hoy en día, en las empresas y sobre todo, en las personas. ¿Qué pasaría si aplicáramos Lean a nuestra vida para ser más felices?
-                        </p>                      
-
-                     </div>
-                </div> 
-                <!-- End Talk --> 
-                 <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Hacking Scrum: piratas iterativos incrementales
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Joan Bacardit
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">
-                        <p>
-                            Durante estos últimos años he estado trabajando con multiples equipos, los cuales he disfrutado y sufrido a la vez. Durante 20 minutos, os quiero invitar a desconectar, relajaros y descubrir como la creatividad del ser humano alcanza cotas inesperadas… Este último año he recopilado algunas de las triquiñuelas, picardías, artimañas y “caraduradas" más surrealistas que algunos miembros de estos equipos han realizado. Al mismo tiempo, aprovechar para compartir con vosotros las lecciones que he aprendido de un rol que no aparece en la guía de Scrum... los “piratas iterativos incrementales”
-                        </p>                      
-
-                     </div>
-                </div> 
-                <!-- End Talk --> 
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        El arte de dar y recibir feedback.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Raúl Quesada Pegalajar
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                       Una de las herramientas más poderosas para la mejora continua personal y de equipo es recibir y ser capaces de dar un buen feedback. El feedback ha de ser continuo, directo y lo más objetivo posible. El feedback mejora la comunicación, construye confianza y ayuda a los compañeros a colaborar con más eficiencia, acelerando la resolución de los problemas. Dar y recibir feedback son dos habilidades muy complejas, que es necesario aprender y prácticar. En esta charla, quiero mostraros la importancia de un feedback de calidad, cómo podéis entrenarlo y os enseñaré algunas de las herramientas y técnicas que utilizo día a día para eso.
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Dieta Agile. No comas mejor, deja de comer peor
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       David Jiménez Sánchez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                        Normalmente cuando alguien se embarca en un proceso de cambio, lo que ocurre es muy parecido a cuando una persona se decide a hacer una dieta.
-                        Lee todo lo que cae en sus manos, acude a nutricionistas más o menos reconocidos, siguen patrones comunes a otras personas, 
-                        copian de otros que han hecho lo mismo y les ha ido genial, sin embargo pierden de vista lo que realmente necesitan que no es otra cosa que mejorar su alimentación, siendo conscientes de
-                        sus limitaciones, su forma de ver el mundo y hacer las cosas.
-                        Esta charla está inspirada en un artículo sobre nutrición cuyo título decía ""No comas mejor, deja de comer peor"" y charlaremos sobre que es más importante, hacer Agile o dejar de hacer ciertas prácticas arraigadas en la industria del Software, el camino aunque con un mismo fin no tiene el mismo recorrido...
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                 <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       IKEA del siglo XXI. La transformación de la caja azul.
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Pilar García y Manu López
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">        
-                        <p>                
-                            La transformación de IKEA en una empresa del siglo XXI nace de la necesidad de las personas que trabajamos en la Compañía y de nuestros clientes, de adaptarnos a la realidad del nuevo entorno que nos rodea. Una realidad donde las relaciones necesitan ser más ágiles y colaborativas.
-                        </p>
-                        <p>
-                            En la charla se explicarán diversos casos reales de cómo IKEA está utilizando las prácticas ágiles para mejorar en su proceso de recruitment, y cómo potenciar la mejora continua, la experimentación y el trabajo en equipo en tienda en su día a día, con el fin de dar soporte a la transformación de IKEA.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Refactoring teams in an agile environment
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Ricard Fusté y Albert Velasco
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                        <p>
-                            Durante la charla explicaremos la reestructuración de los equipos Agile de nuestro departamento de Connectivity en Roche Diagnostics, llevada a cabo durante el 2017. La idea es mostrar los pain points que sufríamos: falta de motivación, sobrecarga de trabajo en posiciones clave, falta de objetivos comunes, commitment no alcanzado a final de sprint, etc. Finalmente, presentaremos el nuevo setup y los beneficios experimentados después de la reorganización. 
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Effort Estimation vs Value Estimation
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Sergi Casbas
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                       Normalmente el equipo es quien estima los proyectos y a través de esa estimación hacemos un seguimiento del mismo y vemos y tomamos decisiones en función de ésta información acerca del esfuerzo. ¿Pero qué hay del valor? ¿No debería ser nuestra prioridad agile la entrega del valor en lugar del esfuerzo? ¿Están realmente los burndow, burnups, velocidad y otros artefactos o métricas alineados con agile? En esta charla propondré una nueva visión para ver los proyectos des de un punto de vista de cliente y no de gestión de proyectos a la vez que utilizar herramientas ya conocidas para poder gestionar los proyectos tanto por valor como por esfuerzo.
-                     </div>
-                </div> 
-                <!-- End Talk -->  
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Promueve una comunidad de práctica en tu empresa
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Daniel de la Cruz
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                    Me gustaría compartir mi experiencia promoviendo la cultura de desarrollo en Typeform.
-                    En esta charla, hablaré de cómo hemos creada una comunidad de práctica para los desarrolladores frontend. Os hablaré de cómo estaba organizada inicialmente la comunidad de práctica, las diferentes iteraciones que hemos hecho y cual es el estado actual. En nuestra comunidad de práctica nos regimos por un sistema sin jerarquía basado en la colaboración y el aprendizaje.
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <div class="row talk-type">
-                    <div>
-                        Charlas L (50 minutos)
-                        <div class="decorator"></div>
-                    </div>                   
-                </div>
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       La felicidad laboral en lo tangible
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Susana Morcuende
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">                        
-                        Con frecuendia banalizamos la felicidad laboral ya que se relaciona con lo etéreo y en el mejor de los casos se llevan a cabo acciones desde planteamientos superficiales como dinámicas para la cohexión de grupo, juegos, etc; En esta charla voy a hablar de cómo materializar la felicidad laboral atendiendo a las necesidades de la persona o en otras palabras implantando ética y conciliacion (Work-life balance) en el día a día de las personas.
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Cómo organizar tu transformación Agile y que no se vuelva un lío
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Xavier Albaladejo
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Una transformación Agile tiene impacto en multitud de ámbitos: organización, procesos, cultura, ingeniería, gestión de producto, portfolio, … ¿Cómo aclararse en la multitud de actividades variopintas a realizar? ¿Cómo saber qué priorizar? ¿Cómo avanzar y no quedarse atascado? ¿Cómo clasificar nuevas ideas y experimentos? ¿Cómo conseguir que la transformación sea “de todos”, compartida, inclusiva y colaborativa? ¿Cómo saber si lo que estás haciendo tiene resultados?
-                        </p>
-                        <p>
-                             En esta sesión verás diversos “tips” basados en experiencias reales que pueden ayudarte a plantear mejor tu transformación, articular la gestión y a comunicar su estado de manera sencilla.
-                        </p>
-                        <p>
-                             Esta es tu sesión si: (1) Eres responsable de transformación (Digital y/o Agile) o Agile Coach. (2) Quieres conocer un modelo con el que dar forma a una estrategia de transformación Agile.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        ¿Cómo convencer al Comité de Dirección para arrancar una transformación Agile?
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Carlos Moure García
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           Todos hemos vivido procesos de transformación agile en diferentes niveles de las organizaciones, algunos a nivel de equipos, áreas o divisiones con mayor o menor éxito. El objetivo de esta charla es compartir con todos vosotros mi experiencia cuando uno se enfrenta a un comité de dirección de una empresa cotizada con el objetivo de explicar el porqué de una transformación de  semejante calado, ¿qué preguntas son las más inquietantes? ¿cuáles son las dudas fundamentales? ¿qué buscan? ¿cómo entienden el proceso? ¿qué métricas buscan? A alguno os sorprenderá la tremenda abstracción de Agile a nivel de Dirección.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Scrum Studio: Creando iniciativas digitales en organizaciones tradicionales
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Jerónimo Palacios
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           TScrum Studio es una nueva fórmula de Gobierno que abarca, a través de un framework, las características para crear un estudio de innovación que gestione productos digitales dentro de un marco de transformación de una gran organización
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        En busca del tiempo perdido
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        David González Argudo
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           Experiencia real, del proceso de transformación a Agile con Scrum, desde la visión de dos posiciones con relación jerárquica, dentro de una misma empresa.
-                            A través de un diálogo el Director de Producto y uno de los Product Owner, os contaremos como ha sido la experiencia de implementar Agile durante los últimos dos años en una gran corporación. Intentando trasladaros las sensaciones, emociones, miedos y conclusiones fruto de esta experiencia.
-
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Gestionando el roadmap de producto de forma efectiva
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Vanesa Tejada
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           En el 2015 empecé a trabajar como Programme Manager y tras más de 2 años de experimentos con roadmaps de producto, he conseguido definir un flujo de trabajo que posee sus artefactos, ceremonias y roles para gestionar un roadmap de manera efectiva y que se mantiene vivo año tras año. Quiero compartir con vosotros los detalles de este flujo: por qué definimos un roadmap, cómo lo hacemos, cómo definimos objetivos de negocio medibles, cómo visualizamos y comunicamos de forma efectiva los progresos, y lo más importante, cómo se organizan y facilitan las sesiones de revisión del roadmap, el momento clave donde reflexionamos, aprendemos y definimos nuestra nueva dirección. 
-
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Agilidad (Hacia la entrega continua ¿Qué te lo impide?)
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Eduardo Ferro Aldama 
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Tal y como nos indica el manifiesto por el Desarrollo Ágil de Software el éxito de trabajar de estar forma se alcanza cuando somos capaces de entregar de forma continua software funcionando y abrazar los cambios requeridos por el negocio. Resumiendo la agilidad nos aporta flexibilidad para que nuestro negocio se adapte e incluso aproveche la velocidad de cambio actual. <br>
-                            Si traducimos esto a terminos técnicos, podríamos hablar de que el objetivo de un equipo de desarrollo ágil es ser capaz de hacer entrega continua (continuous delivery) de software funcionando. La charla parte de este objetivo, la entrega continua e indetifica los problemas y soluciones para conseguirla.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Escalando la Cordillera de la Autogestión"
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Toni Rodríguez Lezcano
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            La Auto-Gestión es como escalar montañas, puede ser muy agradable y sano, pero también duro y peligroso. No es para todo el mundo. Cuanto más alto quieres subir, más experiencia necesitas. En esta charla persentaré un modelo que simplifica este tema tan complejo, mostraré los diferentes picos que te encontrarás al embarcarte en una excursión a las montañas de la autogestión, dónde empezar y qué pasos tomar a continuación.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Slow Agile - ¡Que vuelvan los lentos!
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Thomas Wallet
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           El movimiento Slow defiende la posibilidad de una vida plena y desacelerada. Exploremos algunos principios claves de los movimientos Slow Food, Slow School y Slow City para proyectar las bases de un novedoso Slow Agile, en el cual podamos elegir continuamente el ritmo adecuado para lograr calidad placentera, beneficios sostenibles y conexiones verdaderas en los equipos ágiles.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Scrum y SAFe puestos en práctica: aterrizaje de roles en la realidad de un banco
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Ignacio Brime Yusta
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                           Hay dos formas de personalizar Scrum en una organización: eliminando partes esenciales (mutilando) o dándole profundidad (matizando). Scrum prescribe tres roles fácilmente identificables pero con una gran complejidad en la puesta en marcha. Tras dos años de experiencia sobre la prescripción de Scrum, arrancamos un proceso para dotar de profundidad y de matiz a los roles de Scrum y adaptarlos a nuestra realidad siendo fieles a su esencia. Contaremos este viaje con paradas en los errores cometidos y las lecciones aprendidas. El camino ya ha empezado, y ahora conocemos otra forma de recorrerlo.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Argos, cuando Scrum no es suficiente
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        <i> Esther Peinado y Alberto Serrano </i>
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            ¿Scrum se te queda corto? ¿Las dependencias están matando tus incrementos? ¿Tu empresa ha crecido y tienes la necesidad de escalar? ¿Las soluciones que conoces para ello no te terminan de encajar? Te presentamos Argos, un framework diseñado para construir una suite de productos orientado al trabajo por objetivos, la creación de un incremento integrado y la gestión de dependencias, ¡y todo ello sin olvidar los principios Agile!
-                        </p>                       
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Coaching con datos
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Jaume Jornet
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Throughput, Histogramas, Cycle times, Lead Times, Work In Process, CFDs, Scatterplots, Arrivals vs Departure Rate, … son muchas las herramientas que tenemos para poder obtener información sobre que está sucediendo en nuestro Sistema. Sin embargo, en ocasiones los datos son utilizados de forma incorrecta: a veces para juzgar, a veces para comparar equipos entre ellos, a veces para establecer objetivos. <br>
-
-                            El propósito de esta sesión es compartir las diferentes métricas que podemos obtener sin esfuerzo, y cómo podemos emplearlas para dirigir la mejora continua de nuestro equipo. Mostraremos cómo exponer los datos como un elemento más en el proceso de Coaching de equipos, ayudándoles a obtener las capacidades necesarias para <br>
-
-                            <ol>
-                                <li>interpretarlos, analizarlos y darles sentido dentro de su contexto </li>
-                                <li>reflexionar sobre los mismos para diseñar los siguientes experimentos/hipótesis a llevar a cabo, </li>
-                                <li>tomar decisiones basadas en datos y no en impresiones</li>
-                                <li>evaluar posteriormente si los cambios realizados representan mejoras reales en el sistema </li>
-                            </ol>
-                           
-
-                            haciéndose propietarios de su proceso de mejora. Durante la sesión, mostraremos diferentes Dashboards de datos reales, patrones comunes que podemos encontrar en ellos, cómo identificarlos y como detectar tendencias, así como capacitar a los equipos a interpretarlos por si mismos y tener control sobre sus procesos y como mejorarlos. 
-
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Discusiones y decisiones: herramientas para la efectividad
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Toño de la Torre
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Discutimos, consensuamos, votamos... Tomamos decisiones en nuestro entorno laboral cada día.
-                            Esas discusiones y decisiones están influenciadas siempre del contexto y el entorno: organización muy jerárquica o muy plana, o puede ser un tema que nos afecte a todos o no tenga importancia.<br>
-
-                            Puedes enfocar la reunión a analizar un tema, a ver sus causas, o puedes orientarla a conseguir una acción. Ahora mezcla todo esto con compañeros que estén en remoto y el cóctel es cuando menos interesante.<br>
-
-                            ¿Cómo afrontar una reunión sobre un tema importante en nuestro equipo? Sobre todo si queremos sacar acciones ¿Y si afecta a toda nuestra organización? 
-                            ¿Cómo la preparamos? ¿Eres tú el facilitador? ¿Es necesario que haya uno?<br>
-
-                            En esta charla aprenderemos a distinguir los posibles escenarios que nos podemos encontrar, las diferentes dinámicas que puedes aplicar, desde usar un token para hablar, a hacer un World Café, sus pros y sus contras y la teoría que soporta todo esto.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        No me llames Dolores, llámame Lola. Cultura de la Comunicación
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Antonio Martínez Albalá
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            La comunicación dentro y fuera del equipo son cuestiones claves que van más allá del objetivo de transmitir información. Son vehículos de cambios en la cultura, ese personas sobre procesos, que tanto se habla con formas y herramientas completas. 
-                            Si quieres empezar con Agile, tu primer paso es la comunicación y transparencia.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        TDD: Mi cuaderno de recetas
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Modesto San Juan Álvarez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            "TDD es una parte importantísima de mi flujo de trabajo cuando desarrollo software. Con el paso de los años he modificado la forma en la que lo aplico, he aplicado distintas técnicas y he experimentado distintas formas de escribir mis tests para tratar de sentirme lo más productivo posible. Dar con un flujo de trabajo que me resulte cómodo, trabajar en el nivel de abstracción y con la aproximación adecuada no ha sido fácil y aún así tengo claro que estoy lejos de haber encontrado una fórmula ideal. <br>
-
-                            Elegir entre una aproximación outside-in vs inside-out, qué tipos de dobles de prueba utilizar, escribir tests que no requieran más mantenimiento que el propio código de producción son algunos de los retos a los que podemos tener que enfrentarnos cuando aplicamos TDD en nuestro día a día.<br>
-
-                            En esta charla quiero hablar de cómo aproximo mi trabajo cuando desarrollo aplicando TDD. No se trata de una charla introductoria ni de evangelización sobre las virtudes de TDD, no se trata de una presentación con pantallazos de código. Se trata de una sesión de programación en vivo mientras explico mi flujo de trabajo con ejemplos concretos y en la que intentaré mostrar las principales ""recetas"" que me ayudan en mi día a día."
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Khaleesi is coming! Cómo conquistar los 7 reinos de la Transformación Digital antes de que “Los Otros” (CIO) se te adelanten
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Julián Gómez Bejarano
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Daenerys Targaryen es una de las/los mejores lideres de las Tierras de Poniente. Ella sola ha tenido que ponerse a levantar la pesada empresa dothraki anclada en el pasado, amparada en una fuerza descomunal para destruir que ya no poseía y la ha tenido que convertir en una empresa del siglo XXI de poniente. <br>
-
-                            ¿Cómo lo logra Daenerys la madre de dragones la que no arde? Pues lo logra con la transformación digital de los dothrakis.<br>
-
-                            En esta charla veremos cuales son las claves para asumir una transformación digital en la empresa, como abrazar la agilidad y todos los cambios que nos rodean para poder aprovecharlos en el beneficio de nuestra empresa. Nuestra guía será Daenerys Targaryen que nos mostrará con su propia transformación qué tenemos que hacer y qué no tenemos que hacer, dónde debemos apoyarnos y donde no.<br>
-
-                            Veremos ejemplos de todos los reinos de poniente y de todas las tierras tanto aun lado como al otro del mar angosto. Si quieres vencer a ""los Otros"" no debes perderte los consejos de la madre de dragones.<br>
-
-                            Se acerca el invierno...  ¿no te vas a preparar?
-                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                        Agile desde las trincheras: una historia de Agile Coaches
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Juanma Gómez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            En un formato fresco y cercano, queremos compartir la experiencia que hemos vivido un grupo de coaches en un cliente. Desde la confección de un equipo multidisciplinar de verdad hasta las distintas formas de organización que hemos probado. Hablaremos de nuestros éxitos y también de nuestros castañazos, siempre con la máxima honradez. Además, haremos que sea el público el que vaya decidiendo el camino que siga esta sesión.
-                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Trabajando con equipos de alto rendimiento
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Israel Alcázar Rodríguez
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            La Agilidad nos habla de que los equipos deben ser pequeños, auto-organizados y multidisciplinares. Bonitas palabras, sencillas de entender pero...¿cómo  conseguirlo? En esta charla me gustaría contarte  algunas técnicas y secretos que he ido descubriendo al trabajar con equipos de todo tipo así como algunas cagadas que no me funcionaron.
-                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Communication strategies for scaled and distributed teams
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Carlos Piqueres Ayela
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Current business development implies global demand and global supply.<br>
-                            The amount of work that can be delivered by a single team contributing to a product is limited no matter how efficient the team becomes.<br>
-                            Those factors impose the need to manage multiple distributed teams.<br>
-                            Independently of the work allocation strategy used to scale (feature based, component, hybrid...), communication across the teams is a challenge.<br>
-                            Standard Scrum provides the basic ceremonies as part of the scrum framework.<br>
-                            Meta frameworks such as SAFe or LeSS provide additional basic constructs to enable scalability.<br>
-                            We'll discuss lessons learnt from the trenches to avoid common pitfalls in this type of environment.
-                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Experiencia de usuario como estrategia
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Daniel Torres Burriel
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Trabajar la experiencia de usuario en el ámbito de los proyectos y de los negocios digitales, considerando que todo al final es un producto digital, puede considerarse como una forma de abordar la estrategia. Los equipos, las personas, los perfiles profesionales involucrados en procesos donde la experiencia de usuario dirige, acompaña o guía la gestión de los proyectos, terminan más y mejor formados, más involucrados en el proyecto, y los resultados suelen ser más eficientes.                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->                   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       No hay mejora de Customer Experience sin Agile
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Carlos Iglesias
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            La industria está empezando a darse cuenta de cómo de importante es tener una mentalidad customer-centric. Mejorar la experiencia de cliente empieza a ser una prioridad en los boards de las grandes compañías, pero… ¿están preparadas para asumir el reto?                             
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->  
-                 <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Doble V: Vicios y Virtudes
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        José Ramón Gil Cotaina
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Todo Scrum Máster comienza cargado de ilusión, sin embargo es habitual que esta fuerza se diluya por la rutina, la falta de apoyo o la falta de tiempo... Esto nos lleva a caer en ciertos Vicios, en forma de malas prácticas. Las Virtudes en cambio nos otorgan la posibilidad de seguir motivando el cambio. ¿Eres una Scrum Mom? ¿Te has olvidado que esto también puede ser divertido?... Esta presentación trata de reducir Vicios y fomentar Virtudes. Vuelve a ser un líder, tu equipo lo agradecerá.                
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->    
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Agility @ trivago
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Marcos Pacheco Montero
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Siendo parte de un equipo de Agile coaches de 12 personas me gustaría compartir con todos vosotros lo que significa el ser ágil en una empresa como trivago, donde no solo entendemos el ser ágil al usar diferentes frameworks como Scrum, Kanban... la agilidad forma parte de nuestra cultura y de todo lo que nos rodea.                 
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Impedimentos: Gestión eficaz al escalar Scrum
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Juan José del Campo Bécares
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            En esta charla vamos a exponer claves para realizar una gestión eficaz de impedimentos y riesgos que contribuya a la implantación con éxito de Scrum en un equipo y a su posterior escalado a través bien de marcos como SAFe o LeSS , o de modelos a medida (Spotify). <br>
- 
-                            Veremos:
-                            <ul>
-                                <li> Géstión de impedimientos a nivel de equipo </li>
-                                <li> Escalando impedimentos </li>
-                                <li> La comunicación de impedimentos </li>
-                                <li> Medir para mejorar... también aquí </li>           
-                            </ul>                           
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Business Analysis, superpoderes para el Product Owner
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Alfred Maeso Aztarain
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Además del cambio cultural que supone, el reto principal al que se enfrentan las organizaciones a la hora de afrontar la transformación ágil es disponer de las personas y las capacidades adecuadas para llevar a cabo con éxito sus proyectos. En esta ponencia reflexionaremos acerca del rol de Product Owner, y el análisis de negocio en proyectos ágiles. ¿Hasta qué punto debe disponer de skills de analista de negocio?¿la responsabilidad del análisis de negocio recae solo en el Product Owner? ¿debe haber alguien con el título de Analista de Negocio? ...                    
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-               
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       BDD: Colaborando de Verdad con Negocio
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Eduardo Riol Fernández
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            ¿La colaboración con Negocio es tu animal mitológico favorito?<br>
-                            ¿Oíste hablar de BDD pero crees que es un buzzword más a añadir a la lista de términos de moda?<br>
-                            ¿Crees que usando Cucumber ya haces BDD?<br>
-                            ¿Documentar te resulta una tarea tediosa y sin valor?<br><br>
-
-                            Si has respondido que sí a alguna de estas preguntas, esta charla te interesa. Veremos por qué BDD ayuda a desarrollar software más valioso, cómo ahorra costes y qué clase de equipos (spoiler: TODOS) pueden sacar provecho de practicar BDD.               
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Scrum: Try again!
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                        Benjamín Garrido Barreiro
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Un paseo por las 3 experiencias que he tenido intentando implantar Scrum en proyectos/empresas cuya cultura y estructura son un muro infranqueable al cambio.              
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Modelo Spotify como inspiración para crear una nueva unidad internacional de un gran banco
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Gemma Hornos Cirera
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Hace menos de un año se ha creado en Madrid una unidad internacional y multicultural de un Gran Banco cuyo fin es desarrollar la plataforma unificada de cinco países. Esta unidad tiene grandes retos: la gestión de expectativas y necesidades de los países, alto y rápido crecimiento de equipos, gran nivel de incertidumbre, creación de una nueva organización desde cero... ¿Cómo hemos aprovechado la oportunidad para ser ágiles de verdad? En la charla se explicará nuestro modelo de escalado Agile así como las dificultades y las lecciones aprendidas en el camino.
-                                   
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Ya somos ágiles ¿Y ahora qué?: The Big Bang Theory
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       José Antonio Ortega Barros
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Por nuestra experiencia en grandes clientes que pretenden adoptar la agilidad, hemos visto que la parte de negocio y la parte de innovación todavía no están lo suficientemente maduras. No es suficiente con ser agile en la parte de desarrollo y debemos ser ágiles end to end. Durante esta charla, de manera temática en la serie “The Big Bang Theory” hablaremos de los grandes retos a los que se enfrentan las organizacione desde la dirección: Design Thiking, Lean Startup, Scrum, Devops… con foco en las personas y en la gestión del cambio.              
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Escalado. Hacerse adulto sin pasar por la adolescencia
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Adrián de la Horra
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Cuando 4 proyectos empiezan a crecer y se proponen una meta común, te encuentras con el reto de lograr acercar a la gente y que adopten nuevas metas entre todos. Queremos contaros cómo afrontamos los retos que se presentaron al tiempo que seguía creciendo el equipo de seguridad. Aquí empieza la odisea de trabajar con la intención de cumplir tanto un objetivo común, como tus propios objetivos.              
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Transformación de la relación de la relación de IT con las unidades de negocio
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Raquel Laina
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Experiencia real de cómo en Vocento se ha transformado a lo largo del último año la relación de IT con una de las unidades de negocio principales adoptando metodologías ágiles y los beneficios que se han obtenido.         
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Agilidad, Scrum y Técnicas Ágiles de Desarrollo
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Raúl Herranz
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            En esta charla, se realizará una introducción a la Agilidad, a Scrum y a Técnicas Ágiles de Desarrollo que permitirá a los asistentes tener una visión global y conocer los conceptos que estarán escuchando en el resto de charlas de la CAS2017.        
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Valores y principios en el diseño del software
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Fran Reyes
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            Cuando diseñas software...  ¿Cuáles son los pilares sobre los que se apoyan tus decisiones? ¿Cuál es tu estrategia de priorización?  ¿Programas de manera intuitiva o eres consciente? ¿Puedes explicitar esos valores y principios en el código? <br>
-                            En esta charla hablaremos sobre como los principios y valores pueden aplicarse al diseño del software y reflexionaremos sobre el trabajo de Kent Beck en ese ámbito.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       Guía de autocrecimiento del Scrum Master
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Gastón Valle
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            ¿Hace poco que empezaste a trabajar como Scrum Master y no tienes muy claro como seguir? 
-                            ¿Estas al 50/50 como Scrum Master y miembro del equipo y te gustaría saber más antes de decidir tu futuro?
-                            ¿Ya llevas un tiempo de Scrum Master y te gustaría tener más claro como seguir creciendo? <br>
-                            ¡Entonces la guía de autocrecimiento del Scrum Master es para ti!
-                            Como Scrum Master hay muchas áreas en las que se puede crecer y es importante conocerlas para elegir mejor hacia donde dirigir tu carrera y crecimiento de Scrum Master.
-                            Para eso es importante conocer las áreas de influencia de un SM y que habilidades y herramientas se necesitan para cada una. Y así poder crearte tu propio plan de crecimiento a medida de tus necesidades e inquietudes.
-                            De la charla te llevaras una guía para poder crear tu propio camino de crecimiento como Scrum Master.
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
-                <!-- Talk -->
-                <div class="row">                   
-                    <div class="col-xs-12 col-sm-3 talk-title">
-                       En mi equipo esto funciona pero no sé porque
-                    </div>
-                    <div class="col-xs-12 col-sm-2 talk-author">
-                       Aitor Alzola
-                    </div>
-                    <div class="col-xs-12 col-sm-7 talk-description">         
-                        <p>
-                            En la comunidad ágil apostamos por las cosas bien hechas... pero nos basamos en "sensaciones" y experiencias puntuales para elegir prácticas y técnicas. Existen aún pocos estudios y menos evidencias con las que poder elegir las prácticas y técnicas con una base científica, y lo que hay se conoce poco. ¿Es posible tener evidencias científicas en la que apoyarnos más alla del "en mi equipo esto funciona" a pesar de las dificultades que plantea?
-                        </p>
-                     </div>
-                </div> 
-                <!-- End Talk -->   
+            <!-- MOBILE FRIDAY -->
                 
+        </section>
+
+
+        <section class="container hidden-xs">
+            <div id="responsiveTabs">
+                <ul>
+                    <li><a href="#thursday"> JUEVES </a></li>
+                    <li><a href="#friday"> VIERNES </a></li>
+                </ul>
+
+                <div class="row" id="thursday">
+                    <table class="responsive" border="1px solid">
+                        <thead>
+                            <tr>
+                                <th id="time">horas</th>
+                                <th class="talks">A.Al-Ándalus </th>
+                                <th class="talks">A.Itálica </th>                            
+                                <th class="talks">S.Albaicín </th>
+                                <th class="talks">S.Ronda</th>
+                                <th class="talks">S.Bahía </th>
+                                <th class="talks">S.Marismas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>8:00h/8:50h</td>
+                               <td>
+                                    Check-in
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>    
+                                <td class="empty">
+                                   
+                                </td>          
+                            </tr>
+                            <tr>
+                                <td>
+                                    8:00h/8:50h
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>                       
+                            </tr>
+                            <tr>
+                                <td>
+                                    8:50h/9:15h
+                                </td>
+                                <td class="empty">
+                                    Bienvenida
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>    
+                                <td class="empty">
+                                   
+                                </td>                          
+                            </tr>
+                            <tr>
+                                <td>
+                                     9:15h/10:00h
+                                </td>
+                                <td onClick="showDetails(76)">
+                                     Keynote: Transformación digital y humana
+                                    <span class="speaker"> Ramón Cabezas </span>
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>   
+                                 <td class="empty">
+                                   
+                                </td>                            
+                            </tr>
+                            <tr>
+                                <td>
+                                     10:00h/10:50h
+                                </td>
+                                <td onClick="showDetails(38)">
+                                    Scrum Studio: Creando iniciativas digitales en organizaciones tradicionales
+                                    <span class="speaker"> Jerónimo Palacios</span>
+                                </td>
+                                <td onClick="showDetails(69)">
+                                    Agilidad, Scrum y Técnicas Ágiles de Desarrollo
+                                     <span class="speaker"> Raúl Herranz </span>
+                                </td>                            
+                                <td onClick="showDetails(43)">
+                                    Escalando la Cordillera de la Autogestión
+                                     <span class="speaker"> Toni Rodríguez </span>
+                                </td>
+                                <td onClick="showDetails(63)">
+                                    Scrum@Scale
+                                     <span class="speaker"> Primitivo Cachero </span>
+                                </td>
+                                <td onClick="showDetails(15)">
+                                    Taller de Agile fuera de software
+                                     <span class="speaker"> Xavier Quesada </span>
+                                </td>
+                                 <td onClick="showDetails(13)">
+                                    The 8 stances of a Scrum Master
+                                     <span class="speaker"> Barry Overeem </span>
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                    10:50h/11:30h
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>                      
+                            </tr>        
+                            <tr>
+                                <td>
+                                    11:30h/12:20h
+                                </td>
+                                <td onClick="showDetails(44)" >
+                                    Slow Agile - ¡Que vuelvan los lentos!
+                                     <span class="speaker"> Thomas Wallet</span>
+                                </td>
+                                <td>
+                                    <span onClick="showDetails(18)">     
+                                        Introducción a Agile - Límites del enfoque tradicional y evolución agile
+                                        <span class="speaker first"> Marga Bel Klever </span>
+                                    </span>
+                                    <span onClick="showDetails(19)">
+                                         El Kanban, herramienta todoterreno y elástica
+                                         <span class="speaker"> Sylvain Loubradou</span>
+                                    </span>
+                                </td>                            
+                                <td onClick="showDetails(48)" >
+                                    Discusiones y decisiones: herramientas para la efectividad
+                                     <span class="speaker"> Toño de la Torre </span>
+                                </td>
+                                <td onClick="showDetails(67)" >
+                                    Escalado. Hacerse adulto sin pasar por la adolescencia
+                                     <span class="speaker"> Adrián de la Horra </span>
+                                </td>
+                                <td  onClick="showDetails(5)" class="double">
+                                    Taller: Creando los cimientos de una cultura Agile
+                                     <span class="speaker"> Diego Rojas </span>
+                                     <div class="joining"></div>
+                                </td>
+                                 <td  onClick="showDetails(4)" class="double">
+                                    Taller: ¡Deconstruyendo los roles de Scrum con LEGO!
+                                     <span class="speaker"> Santiago Vidal  </span>
+                                     <div class="joining"></div>
+                                </td>
+                            </tr>                         
+                            <tr>
+                                <td>
+                                     12:30h/13:20h
+                                </td>
+                                 <td onClick="showDetails(53)">
+                                    Trabajando con equipos de alto rendimiento
+                                     <span class="speaker"> Israel Alcázar  </span>
+                                </td>
+                                <td onClick="showDetails(70)">
+                                    Valores y principios en el diseño del software
+                                    <span class="speaker"> Fran Reyes </span>
+                                </td>                           
+                                <td onClick="showDetails(35)">
+                                    La felicidad laboral en lo tangible
+                                     <span class="speaker"> Susana Morcuende </span>
+                                </td>
+                                <td onClick="showDetails(46)">
+                                    Argos, cuando Scrum no es suficiente
+                                     <span class="speaker"> Esther Peinado y Alberto Serrano </span>
+                                </td>        
+                                <td></td>
+                                <td></td>                                                
+                            </tr>
+                             <tr>
+                                <td>
+                                    13:20h/14:40h
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>                          
+                            </tr>    
+                              <tr>
+                                <td>
+                                     14:40h/15:30h
+                                </td>
+                                 <td onClick="showDetails(36)">
+                                    Cómo organizar tu transformación Agile y que no se vuelva un lío
+                                     <span class="speaker"> Xavier Albaladejo</span>
+                                </td>
+                                <td onClick="showDetails(64)">
+                                    Scrum: Try again!
+                                    <span class="speaker"> Benjamín Garrido  </span>                                
+                                </td>                           
+                                <td onClick="showDetails(49)">
+                                    No me llames Dolores, llámame Lola. Cultura de la Comunicación
+                                     <span class="speaker"> Antonio Martínez  </span>
+                                </td>
+                                <td onClick="showDetails(45)">
+                                    Scrum y SAFe puestos en práctica: aterrizaje de roles en la realidad de un banco
+                                     <span class="speaker"> Ignacio Brime  </span>
+                                </td>
+                                <td class="double" onClick="showDetails(1)">
+                                    Taller KANBAN SYSTEM DESIGN - Toma el control para que puedas empezar a mejorar
+                                     <span class="speaker"> Gerard Chiva </span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>
+                                 <td class="double" onClick="showDetails(6)">
+                                    Taller de Liderazgo para la transformación
+                                     <span class="speaker"> Jose Ramón Díaz </span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>
+                            </tr>   
+                            <tr>
+                                <td>
+                                     15:40h/16:30h
+                                </td>
+                                 <td>
+                                    <span onClick="showDetails(24)">
+                                        Los domingos no eres ágil (y tenemos pruebas)
+                                        <span class="speaker first"> Nino Dafonte </span>
+                                    </span>
+                                    <span onClick="showDetails(29)">
+                                        Dieta Agile. No comas mejor, deja de comer peor
+                                        <span class="speaker"> David Jiménez</span>  
+                                    </span>                                    
+                                </td>
+                                <td>
+                                    <span onClick="showDetails(20)">
+                                        El PO como catalizador del cambio
+                                        <span class="speaker first"> Ferran Gomis </span>
+                                    </span>
+                                    <span onClick="showDetails(31)">
+                                        From zero to hero - arrancando un proyecto SCRUM
+                                        <span class="speaker"> Raquel Pérez</span>
+                                    </span>
+                                </td>
+                               
+                                <td>
+                                    <span onClick="showDetails(26)">                                        
+                                        Peer Learning Universites. Aprendiendo de los desafíos de Twitter
+                                        <span class="speaker first"> Aleix Palau </span>
+                                    </span>
+                                    <span onClick="showDetails(73)">
+                                        Cómo ser más feliz siendo Lean Thinker
+                                        <span class="speaker"> Nati Vilela</span>
+                                    </span>
+                                </td>                                
+                                <td>
+                                    <span onClick="showDetails(21)">
+                                        La Retro de Portfolio
+                                        <span class="speaker"> Gerardo Ponte </span>
+                                    </span>
+                                    <span onClick="showDetails(32)">
+                                        Effort Estimation vs Value Estimation
+                                        <span class="speaker"> Sergi Casbas</span>
+                                    </span>
+                                </td>  
+                                <td></td>
+                                <td></td>
+
+                            </tr> 
+                             <tr>
+                                <td>
+                                     16:30h/17:00h
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>                               
+                            </tr>  
+                            <tr>
+                                <td>
+                                    17:00h/17:50h
+                                </td>
+                                <td onClick="showDetails(37)">
+                                    Pedimos apoyo al más alto nivel, ¿cómo convencemos a un C-Level de una Transformación Agile?
+                                     <span class="speaker"> Carlos Moure </span>
+                                </td>
+                                <td onClick="showDetails(71)">
+                                    En mi equipo esto funciona pero no sé porque
+                                     <span class="speaker"> Aitor Alzola </span>
+                                </td>                            
+                                <td onClick="showDetails(72)">
+                                    Guía de autocrecimiento del Scrum Master
+                                     <span class="speaker"> Gastón Valle</span>
+                                </td>
+                                <td onClick="showDetails(66)">
+                                    Modelo Spotify como inspiración para crear una nueva unidad internacional de un gran banco.
+                                     <span class="speaker"> Gemma Hornos y Nicolas Chaper </span>
+                                </td>
+                                <td onClick="showDetails(11)">
+                                    Taller: It’s more than drawing… become a visual facilitator today!
+                                     <span class="speaker"> Jaume Durany y Juan Antonio Sosa</span>
+                                </td>
+                                 <td onClick="showDetails(12)">
+                                    Taller de introducción al coaching. Cómo tener conversaciones diferentes.
+                                     <span class="speaker"> Marta San Martín </span>
+                                </td>
+                            </tr>     
+                            <tr>
+                                <td>
+                                     18:00h/19:00h
+                                </td>
+                                <td onClick="showDetails(77)">
+                                    <span class="mobile-title"> Keynote: La voz, la clave del éxito en tu comunicación </span>
+                                    <span class="speaker"> Marta Pinillos </span>
+                                </td>
+                                <td class="empty">
+                                    
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>    
+                                <td class="empty">
+                                   
+                                </td>                          
+                            </tr>                              
+                        </tbody>
+                    </table>               
+                </div>
+
+                <!-- FRIDAY -->
+                <div id="friday" class="row"> 
+                    <table class="responsive" border="1px solid">
+                        <thead>
+                            <tr>
+                                <th id="time">horas</th>
+                                <th class="talks">A.Al-Ándalus </th>
+                                <th class="talks">A.Itálica </th>                            
+                                <th class="talks">S.Albaicín </th>
+                                <th class="talks">S.Ronda</th>
+                                <th class="talks">S.Bahía </th>
+                                <th class="talks">S.Marismas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    9:00h/9:15h
+                                </td>
+                                <td class="empty">
+                                    Bienvenida
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>    
+                                <td class="empty">
+                                   
+                                </td>                          
+                            </tr>
+                            <tr>
+                                <td>
+                                     9:15h/10:00h
+                                </td>
+                                <td onClick="showDetails(74)">
+                                    Keynote: The 8 Stances of a Scrum Master
+                                     <span class="speaker"> Barry Overeem</span>
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>   
+                                 <td class="empty">
+                                   
+                                </td>                            
+                            </tr>                           
+                            <tr>
+                                <td>10:00h/10:50h</td>
+                               <td onClick="showDetails(56)">
+                                     No hay mejora de Customer Experience sin Agile
+                                     <span class="speaker"> Carlos Iglesias</span>                                   
+                                </td>
+                                <td onClick="showDetails(42)">
+                                     Agilidad (Hacia la entrega continua ¿Qué te lo impide?)
+                                     <span class="speaker"> Eduardo Ferro</span>   
+                                </td>
+                                <td onClick="showDetails(47)">
+                                     Coaching con datos
+                                     <span class="speaker"> Jaume Jornet </span>   
+                                </td>
+                                <td onClick="showDetails(39)">
+                                     Running Sushi Product
+                                     <span class="speaker"> Manuela Procopio y Alberto Gomez </span>   
+                                </td> 
+                                <td onClick="showDetails(9)">
+                                     Taller: Gamestorming
+                                     <span class="speaker"> María José Contreras, Janire Paskua</span>   
+                                </td>    
+                                <td onClick="showDetails(10)">
+                                     Taller: Training from the BACK of the Room. Aprendiendo a enseñar mejor
+                                     <span class="speaker"> Miquel Rodríguez  </span>   
+                                </td>          
+                            </tr>
+                            <tr>
+                                <td>
+                                    10:50h/11:30h
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>                       
+                            </tr>
+                            <tr>
+                                <td>
+                                    11:30h/12:20h
+                                </td>
+                                <td onClick="showDetails(41)">
+                                    Gestionando el roadmap de producto de forma efectiva
+                                     <span class="speaker"> Vanesa Tejada </span>
+                                </td>
+                                <td onClick="showDetails(61)">
+                                    BDD: Colaborando de Verdad con Negocio
+                                    <span class="speaker"> Eduardo Riol </span>
+                                    
+                                </td>                            
+                                <td onClick="showDetails(17)">
+                                    Comunidades de Practica – la fuerza no-tan-oculta impulsando el éxito de Ericsson ICT Development Center
+                                     <span class="speaker"> Almudena Rodríguez </span>
+                                </td>
+                                <td onClick="showDetails(59)">
+                                    Impedimentos: Gestión eficaz al escalar Scrum
+                                     <span class="speaker"> Juan José del Campo </span>
+                                </td>
+                                <td onClick="showDetails(2)" class="double">
+                                    Taller: Aprendemos practicando y jugando
+                                     <span class="speaker"> Elena Navarro Molina </span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>
+                                 <td onClick="showDetails(8)" class="double">
+                                    Taller: ¡Design Thinking o cómo escapar de las viejas ideas!
+                                     <span class="speaker"> Óscar Naveiras Picos  </span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>         
+                            </tr>
+                             <tr>
+                                <td>
+                                    12:30h/13:20h
+                                </td>
+                                <td onClick="showDetails(58)">
+                                    Agilidad @ trivago
+                                     <span class="speaker"> Marcos Pacheco Montero </span>
+                                </td>
+                                <td onClick="showDetails(62)">
+                                    Yo soy Dev, yo soy Ops y somos dos en un equipo
+                                    <span class="speaker"> Luis Fraile y Leo Díaz </span>
+                                </td>                           
+                                <td onClick="showDetails(52)">
+                                    Agile desde las trincheras: una historia de Agile Coaches
+                                     <span class="speaker"> Juanma Gómez, Pep Ramírez, David González, Eduardo Cabrera </span>
+                                </td>
+                                <td onClick="showDetails(68)">
+                                    Transformación de la relación de la relación de IT con las unidades de negocio
+                                     <span class="speaker"> Raquel Laina </span>
+                                </td>        
+                                <td></td>
+                                <td></td>                        
+                            </tr>    
+                             <tr>
+                                <td>
+                                    13:20h/14:40h
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                   <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                </td>          
+                            </tr>   
+                            <tr>
+                                <td>
+                                     14:40h/15:30h
+                                </td>
+                                <td onClick="showDetails(51)">
+                                    Khaleesi is coming! Cómo conquistar los 7 reinos de la Transformación Digital antes de que “Los Otros” (CIO) se te adelanten
+                                     <span class="speaker"> Julián Gómez  </span>
+                                </td>
+                                <td onClick="showDetails(50)">
+                                    TDD: Mi cuaderno de recetas
+                                    <span class="speaker"> Modesto San Juan </span>
+                                    
+                                </td>                            
+                                <td onClick="showDetails(65)">
+                                    Ya somos ágiles ¿Y ahora qué?: The Big Bang Theory
+                                     <span class="speaker"> José Antonio Ortega  </span>
+                                </td>
+                                <td onClick="showDetails(57)">
+                                    Doble V: Vicios y Virtudes
+                                     <span class="speaker"> José Ramón Gil  </span>
+                                </td>
+                                <td onClick="showDetails(3)" class="double">
+                                    Taller de Facilitación Gráfica
+                                     <span class="speaker"> Roberto Cruz y David Fernández</span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>
+                                 <td onClick="showDetails(7)" class="double">
+                                    Taller: Equipos Agiles Modo Bambú: Fuertes pero Flexibles
+                                     <span class="speaker"> Jesús Méndez  </span>
+                                     <div class="joining" style="height: 100px; bottom: -90px;"></div>
+                                </td>         
+                            </tr> 
+                            <tr>
+                                <td>
+                                    15:40 - 16:30
+                                </td>
+                                <td>
+                                    <span onClick="showDetails(23)">
+                                        7 things an Agile Coach should know but doesn't
+                                        <span class="speaker first"> Steven Wallace </span>
+                                    </span>
+                                    <span onClick="showDetails(27)">
+                                         IKEA del siglo XXI. La transformación de la caja azul.
+                                         <span class="speaker"> Pilar Garcia y Manu López </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span onClick="showDetails(34)">
+                                        Hacking Scrum: piratas iterativos incrementales
+                                        <span class="speaker first"> Juan Bacardit  </span>
+                                    </span>
+                                    <span onClick="showDetails(28)">
+                                         El arte de dar y recibir feedback
+                                         <span class="speaker"> Raúl Quesada Pegalajar</span>
+                                    </span>
+                                </td>                           
+                                <td>
+                                    <span onClick="showDetails(33)">
+                                        Promueve una comunidad de práctica en tu empresa
+                                        <span class="speaker first"> Daniel de la Cruz </span>
+                                    </span>
+                                    <span onClick="showDetails(30)">
+                                         Refactoring agile teams
+                                         <span class="speaker"> Ricard Fusté y Albert Velasco</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span onClick="showDetails(25)">
+                                        Haz lo que yo te diga, pero no lo que yo haga. ¿Y tu, Scrum Master o Agile Coach, sigues los principios ágiles?
+                                        <span class="speaker first"> Manolo López </span>
+                                    </span>
+                                    <span onClick="showDetails(22)">
+                                         Equipos autorganizados... y de managament... pues va a ser que si!
+                                         <span class="speaker"> Joaquín Precioso Sánchez</span>
+                                    </span>
+                                </td>        
+                                <td></td>
+                                <td></td>    
+                            </tr>
+                            <tr>
+                                <td>
+                                    16:30h/17:00h
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td> 
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>    
+                                <td class="event">
+                                    <i class="fa fa-coffee" aria-hidden="true"></i>
+                                </td>                       
+                            </tr>
+                            <tr>
+                                <td>17:00h/17:50h</td>
+                               <td onClick="showDetails(55)">
+                                     Experiencia de usuario como estrategia
+                                     <span class="speaker"> Daniel Torres  </span>                                   
+                                </td>
+                                <td onClick="showDetails(60)">
+                                     Business Analysis, superpoderes para el Product Owner
+                                     <span class="speaker"> Alfred Maeso  </span>   
+                                </td>
+                                <td onClick="showDetails(40)">
+                                     En busca del tiempo perdido
+                                     <span class="speaker"> David González  </span>   
+                                </td>
+                                <td onClick="showDetails(54)">
+                                     Communication strategies for scaled and distributed teams
+                                     <span class="speaker"> Carlos Piqueres  </span>   
+                                </td> 
+                                <td onClick="showDetails(16)">
+                                     Taller: El Product Owner estratégico
+                                     <span class="speaker"> Cristian Camilo </span>   
+                                </td>    
+                                <td onClick="showDetails(14)">
+                                     Taller: Auto organización a escala
+                                     <span class="speaker"> Adrian Perreau  </span>   
+                                </td>          
+                            </tr>
+                            <tr>
+                                <td>
+                                     18:00h/18:50h
+                                </td>
+                                <td onClick="showDetails(78)">
+                                    Keynote: Agile works when it's not about Agile - A Paradox
+                                    <span class="speaker">
+                                        Neil Killic
+                                    </span>
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>   
+                                 <td class="empty">
+                                   
+                                </td>                            
+                            </tr>
+                            <tr>
+                                <td>
+                                     18:50h/19:00h
+                                </td>
+                                <td class="event">
+                                    Cierre
+                                </td>
+                                <td class="empty">
+                                  
+                                </td>
+                                <td class="empty">
+                                   
+                                </td>
+                                <td class="empty">
+                                   
+                                </td> 
+                                <td class="empty">
+                                   
+                                </td>   
+                                 <td class="empty">
+                                   
+                                </td>                            
+                            </tr>
+                        </tbody>
+                    </table>             
+
+                </div>              
             </div>
-        </div>
-</section>
+            
+        </section>
 
-
-<div id="footer"></div>
+        <div id="footer"></div>
+        <script>
+            $('#responsiveTabs').responsiveTabs({
+                startCollapsed: 'accordion'
+            });   
+             $('#responsiveTabs-mobile').responsiveTabs({
+                startCollapsed: 'accordion'
+            });            
+        </script>    
 
 	</body>
 </html>
