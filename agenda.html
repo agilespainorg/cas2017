@@ -67,13 +67,15 @@
             var getTemplate = function(talk){
                 var template = '<div id="talk-modal">';
                 template += '<span class="close" onClick="closeDetails()">&times;</span>';
-                template += '<div id="talk-modal-talk">';
+                template += '<div id="talk-modal-talk">';              
                 template += '<h3> ' + talk.title + '</h3>';  
                 template += '<p><b> ' + talk.format + '</b></p>';             
                 template += '<p> ' + talk.description + '</p>';
                 template += '</div>';
                 template += '<div id="talk-modal-speaker">';
-                
+                if(talk['team-image']){
+                    template += '<p style="text-align: center"> <img style="width: 250px; height: auto; margin-bottom: 20px;" src="images/speakers/' + talk['team-image'] + '"></p>';                
+                } 
                 template += '<h4> ' + talk.name + '</h4>';    
                 if(talk['image']){
                     template += '<p> <img src="images/speakers/' + talk['image'] + '"></p>';                
@@ -93,7 +95,6 @@
                 template += '<p id="talk-speaker-description"> ' + talk['author-des'] + '</p>';               
                 if(talk.others){                    
                     for(var i=0; i < talk.others.length; i++){ 
-                        console.log(talk.others[i]);
                         template += '<h4 style="margin-top: 40px;"> ' + talk.others[i].name + '</h4>';    
                         if(talk.others[i]['image']){
                             template += '<p> <img src="images/speakers/' + talk.others[i]['image'] + '"></p>';                
@@ -136,7 +137,7 @@
             $.ajax({
               url: "agenda.json"              
             }).done(function(response) {
-              talks = response;
+                talks = response;
             });
         </script>
 
@@ -339,7 +340,7 @@
                     <td onClick="showDetails(45)"> 
                         <span class="space">  S.Ronda </span>
                         <span class="mobile-title">Scrum y SAFe puestos en práctica: aterrizaje de roles en la realidad de un banco</span>
-                        <span class="speaker">Ignacio Brime</span>
+                        <span class="speaker">Ignacio Brime y Juanma Gómez</span>
                     </td>
                     <td onClick="showDetails(1)">
                         <span class="space">  S.Bahía </span>
@@ -540,7 +541,7 @@
                     <td onClick="showDetails(2)">
                         <span class="space">  S.Bahía </span>
                         <span class="mobile-title">Aprendemos practicando y jugando</span>
-                        <span class="speaker">Elena Navarro Molina</span>
+                        <span class="speaker">Elena Navarro Molina y Marco Massarotto</span>
                     </td>
                     <td onClick="showDetails(8)"> 
                         <span class="space"> S.Marismas </span>
@@ -564,7 +565,7 @@
                     <td onClick="showDetails(52)">
                         <span class="space">  S.Albaicín </span>
                         <span class="mobile-title">Agile desde las trincheras: una historia de Agile Coaches</span>
-                        <span class="speaker">Juanma Gómez, Pep Ramírez, David González, Eduardo Cabrera</span>
+                        <span class="speaker">Juanma Gómez, Eduardo Cabrera, Daniel Rodríguez, Pedro Polo</span>
                     </td>
                     <td onClick="showDetails(68)">
                         <span class="space">  S.Ronda </span>
@@ -690,7 +691,7 @@
                     <td onClick="showDetails(40)">
                         <span class="space">  S.Albaicín </span>
                         <span class="mobile-title">En busca del tiempo perdido</span>
-                        <span class="speaker">David González</span>
+                        <span class="speaker">David González y Pep Ramírez</span>
                     </td>
                     <td onClick="showDetails(54)">
                         <span class="space">  S.Ronda </span>
@@ -992,7 +993,7 @@
                                 </td>
                                 <td onClick="showDetails(45)">
                                     Scrum y SAFe puestos en práctica: aterrizaje de roles en la realidad de un banco
-                                     <span class="speaker"> Ignacio Brime  </span>
+                                     <span class="speaker"> Ignacio Brime y Juanma Gómez  </span>
                                 </td>
                                 <td class="double" onClick="showDetails(1)">
                                     Taller KANBAN SYSTEM DESIGN - Toma el control para que puedas empezar a mejorar
@@ -1269,7 +1270,7 @@
                                 </td>
                                 <td onClick="showDetails(2)" class="double">
                                     Taller: Aprendemos practicando y jugando
-                                     <span class="speaker"> Elena Navarro Molina </span>
+                                     <span class="speaker"> Elena Navarro Molina y Marco Massarotto</span>
                                      <div class="joining" style="height: 100px; bottom: -90px;"></div>
                                 </td>
                                  <td onClick="showDetails(8)" class="double">
@@ -1292,7 +1293,7 @@
                                 </td>                           
                                 <td onClick="showDetails(52)">
                                     Agile desde las trincheras: una historia de Agile Coaches
-                                     <span class="speaker"> Juanma Gómez, Pep Ramírez, David González, Eduardo Cabrera </span>
+                                     <span class="speaker"> Juanma Gómez, Eduardo Cabrera, Daniel Rodríguez, Pedro Polo </span>
                                 </td>
                                 <td onClick="showDetails(68)">
                                     Transformación de la relación de la relación de IT con las unidades de negocio
@@ -1438,7 +1439,7 @@
                                 </td>
                                 <td onClick="showDetails(40)">
                                      En busca del tiempo perdido
-                                     <span class="speaker"> David González  </span>   
+                                     <span class="speaker"> David González y Pep Ramírez  </span>   
                                 </td>
                                 <td onClick="showDetails(54)">
                                      Communication strategies for scaled and distributed teams
