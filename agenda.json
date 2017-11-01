@@ -861,7 +861,13 @@
         "image": "delahorra.jpg",
         "twitter": "",
         "linkedin": "",
-        "web": ""
+        "web": "",
+        "others" : [{
+            "name": "Teresa García",
+            "author-des": "",
+            "twitter": "asereteresa23",
+            "linkedin": "https://www.linkedin.com/in/mtgdiaz/"
+        }]
     },
     {
         "id": 68,
