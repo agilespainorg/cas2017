@@ -417,15 +417,15 @@
     },
     {
         "id": 34,
-        "author-des": "Computer science engineer, post-graduated in Lean Manufacturing. Passionate for well-crafted software! Developing enterprise software since 2003, working from startups to large companies. University teacher of software engineering at UPC. Scrum Master, Technical Coach and software developer at multiple companies. Sponsoring of XP, CI, CD and DevOps cultural changes, and training IT and Dev teams to be able to establish a frequent delivery pipeline.",
-        "name": "Juan Bacardit Barrera",
-        "title": "Hacking Scrum: piratas iterativos incrementales",
+        "author-des": "",
+        "name": "Jaime Pallarés Rel",
+        "title": "El reto de implantar Nexus de Scrum.org en 1 año",
         "format": "Charla M - 20 minutos",
-        "description": "<p>Durante estos últimos años he estado trabajando con multiples equipos, los cuales he disfrutado y sufrido a la vez. Durante 20 minutos, os quiero invitar a desconectar, relajaros y descubrir como la creatividad del ser humano alcanza cotas inesperadas… Este último año he recopilado algunas de las triquiñuelas, picardías, artimañas y “caraduradas\" más surrealistas que algunos miembros de estos equipos han realizado. Al mismo tiempo, aprovechar para compartir con vosotros las lecciones que he aprendido de un rol que no aparece en la guía de Scrum... los “piratas iterativos incrementales” </p>",
-        "image": "bacardit.png",
-        "twitter": "juanbacardit",
-        "linkedin": "https://www.linkedin.com/in/juanbacardit/",
-        "web": "http://www.juanbacardit.com"
+        "description": "",
+        "image": "",
+        "twitter": "",
+        "linkedin": "",
+        "web": ""
     },
     {
         "id": 35,
@@ -477,15 +477,24 @@
     },
     {
         "id": 39,
-        "author-des": "",
-        "name": "Manuela Procopio y Alberto Gomez",
+        "team-image": "manuelaalberto.jpg",
+        "author-des": "Alberto es  Agile Coach​ en Agilar​, Scrum Master. Ingeniero informático apasionado de las metodologías Agiles y la cultura Kaizen y con un Postgrado en Metodologías Agiles (PMA). Durante sus más de 14 años de trayectoria profesional en el campo del desarrollo de software ha podido ayudar tanto a pequeñas como a grandes organizaciones a ejecutar sus proyectos de una manera más eficiente y productiva. Alberto es especialista en trabajar con equipos móviles y equipos web. Aplicando técnicas Lean / Agile, y sin perder de vista el trato humano, ha ayudado a transformar y evolucionar en la cultura corporativa de las empresas. Directo y entusiasta, es capaz de conseguir resultados de trabajo óptimos en equipos de desarrollo que necesitan un extra de motivación y orientación.​",
+        "name": "Alberto Gomez",
         "title": "Running Sushi Product",
         "format": "Charla L - 50 minutos",
-        "description": "",
+        "description": "<p> Entregar producto combinando Service Design, UX ​, Lean StartUp ​y ​Agile al estilo Running Sushi. ​Mostraremos un framework de trabajo flexible y adaptable a todo tipo de escenario, trabajando con los mejores equipos para cada situación y entregando valor en todo momento.</p><p>Muchos hablan de esto, nosotros lo hacemos y te lo contamos. </p>",
         "image": "",
-        "twitter": "",
-        "linkedin": "",
-        "web": ""
+        "twitter": "agomezagil",
+        "linkedin": "https://www.linkedin.com/in/agomezagil/",
+        "web": "",
+        "others" : [{
+            "author-des": "Mentora, facilitadora y Scrum Master. Licenciada en Administración de Empresas y Master en Investigación para el Diseño y la Innovación Manuela, a través del diseño estratégico y de servicios, el análisis de tendencias y las técnicas ágiles de gestión ayuda a personas, empresas y organizaciones a diseñar soluciones creativas y viables a sus retos.<br>Es profesora y formadora en Diseño de Servicios, Design Thinking, Trend Research y Scrum en empresas y organizaciones, así como en escuelas de diseño y negocios en Europa y en Ámerica Latina.<br>Es cofundadora de _coworkshops y We Push, dos iniciativas internacionales que, con diferentes enfoques, trabajan en promover  gestionar y diseñar los procesos de innovación y el cambio organizacional.<br>Manuela es también Directora Operativa de la Escuela de Management for Creative Industries en IED Barcelona. ",
+            "name": "Manuela Procopio",
+            "image": "manuelapro",
+            "twitter": "",
+            "linkedin": "https://www.linkedin.com/in/manuelaprocopio/​ ",
+            "web": ""
+        }]
     },
     {
         "id": 40,
